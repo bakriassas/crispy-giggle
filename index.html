@@ -1,0 +1,1221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AI in Finance & Banking | Credit Card Fraud Detection</title>
+<style>
+:root {
+  --ink: #102A43;
+  --ink-2: #243B53;
+  --muted: #627D98;
+  --paper: #F7FAFC;
+  --card: #FFFFFF;
+  --line: rgba(16, 42, 67, 0.12);
+  --blue: #2563EB;
+  --cyan: #0891B2;
+  --green: #059669;
+  --amber: #D97706;
+  --red: #DC2626;
+  --purple: #7C3AED;
+  --shadow: 0 18px 50px rgba(16, 42, 67, 0.10);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background:
+    radial-gradient(circle at 10% 0%, rgba(37, 99, 235, 0.12), transparent 32%),
+    radial-gradient(circle at 90% 20%, rgba(8, 145, 178, 0.10), transparent 30%),
+    var(--paper);
+  color: var(--ink);
+  line-height: 1.65;
+  overflow-x: hidden;
+}
+
+a { color: inherit; }
+
+.container {
+  width: min(1180px, calc(100% - 40px));
+  margin: 0 auto;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 8px 14px;
+  background: rgba(255,255,255,0.78);
+  color: var(--ink-2);
+  font-size: 13px;
+  font-weight: 700;
+  backdrop-filter: blur(12px);
+}
+
+.badge .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 0 5px rgba(5, 150, 105, 0.13);
+}
+
+/* HERO */
+.hero {
+  min-height: 92vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 34px 0 56px;
+}
+
+.hero-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  color: var(--muted);
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.hero-main {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 48px;
+  align-items: center;
+  padding: 70px 0;
+}
+
+.kicker {
+  color: var(--blue);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-weight: 900;
+  font-size: 13px;
+  margin-bottom: 18px;
+}
+
+h1 {
+  font-size: clamp(42px, 6vw, 76px);
+  line-height: 1.03;
+  letter-spacing: -0.06em;
+  color: var(--ink);
+  margin-bottom: 26px;
+}
+
+h1 span {
+  background: linear-gradient(90deg, var(--blue), var(--cyan));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.hero-subtitle {
+  font-size: 21px;
+  color: var(--ink-2);
+  max-width: 760px;
+  margin-bottom: 28px;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 46px;
+  padding: 0 18px;
+  border-radius: 12px;
+  text-decoration: none;
+  font-weight: 800;
+  font-size: 14px;
+  border: 1px solid var(--line);
+  background: white;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.btn.primary {
+  color: white;
+  background: linear-gradient(135deg, var(--blue), var(--cyan));
+  border: none;
+  box-shadow: 0 16px 40px rgba(37, 99, 235, 0.25);
+}
+
+.btn:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+
+.hero-visual {
+  position: relative;
+  padding: 28px;
+  border-radius: 28px;
+  background: rgba(255,255,255,0.72);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(18px);
+}
+
+.risk-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  padding: 22px;
+  margin-bottom: 16px;
+  box-shadow: 0 10px 28px rgba(16,42,67,0.08);
+}
+
+.risk-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.risk-title {
+  font-weight: 900;
+  color: var(--ink);
+}
+
+.risk-score {
+  font-weight: 1000;
+  font-size: 36px;
+  color: var(--red);
+  line-height: 1;
+}
+
+.bar {
+  height: 11px;
+  background: #E2E8F0;
+  border-radius: 999px;
+  overflow: hidden;
+  margin: 12px 0 12px;
+}
+
+.bar > div {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--green), var(--amber), var(--red));
+  width: 82%;
+}
+
+.signal-list {
+  display: grid;
+  gap: 10px;
+  font-size: 14px;
+  color: var(--ink-2);
+}
+
+.signal {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.signal strong { color: var(--ink); }
+
+.decision {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border-radius: 18px;
+  background: #FFF7ED;
+  border: 1px solid rgba(217,119,6,0.25);
+  padding: 16px 18px;
+}
+
+.decision strong { color: var(--amber); }
+
+/* STATS */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+}
+
+.stat {
+  background: rgba(255,255,255,0.80);
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  padding: 22px;
+  min-height: 145px;
+  box-shadow: 0 10px 30px rgba(16,42,67,0.06);
+}
+
+.stat-num {
+  font-size: 42px;
+  line-height: 1;
+  font-weight: 1000;
+  letter-spacing: -0.04em;
+  color: var(--ink);
+}
+
+.stat-num small {
+  font-size: 18px;
+  color: var(--blue);
+  letter-spacing: -0.02em;
+}
+
+.stat-label {
+  margin-top: 12px;
+  color: var(--muted);
+  font-weight: 700;
+  font-size: 13px;
+}
+
+/* NAV */
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(247,250,252,0.86);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  backdrop-filter: blur(18px);
+}
+
+.nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 14px 0;
+}
+
+.nav-logo {
+  font-weight: 1000;
+  color: var(--ink);
+}
+
+.nav-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  list-style: none;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: var(--ink-2);
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.nav-links a:hover { color: var(--blue); }
+
+/* SECTIONS */
+section { padding: 92px 0; }
+
+.section-head {
+  max-width: 850px;
+  margin-bottom: 48px;
+}
+
+.eyebrow {
+  color: var(--blue);
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: 12px;
+  font-weight: 1000;
+  margin-bottom: 12px;
+}
+
+h2 {
+  font-size: clamp(30px, 4vw, 52px);
+  line-height: 1.1;
+  letter-spacing: -0.04em;
+  margin-bottom: 16px;
+}
+
+.section-head p {
+  font-size: 18px;
+  color: var(--muted);
+}
+
+/* COMPARISON */
+.compare-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+}
+
+.compare-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  padding: 28px;
+  box-shadow: 0 12px 34px rgba(16,42,67,0.07);
+}
+
+.compare-card h3 {
+  font-size: 25px;
+  margin-bottom: 8px;
+}
+
+.compare-card.predictive { border-top: 5px solid var(--blue); }
+.compare-card.generative { border-top: 5px solid var(--purple); }
+
+.compare-list {
+  margin-top: 18px;
+  display: grid;
+  gap: 12px;
+  list-style: none;
+}
+
+.compare-list li {
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: #F8FAFC;
+  border: 1px solid var(--line);
+  color: var(--ink-2);
+}
+
+.compare-list strong { color: var(--ink); }
+
+/* MODELS */
+.models {
+  background: #EFF6FF;
+  border-top: 1px solid rgba(37,99,235,0.12);
+  border-bottom: 1px solid rgba(37,99,235,0.12);
+}
+
+.models-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+}
+
+.model {
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  padding: 26px;
+  min-height: 360px;
+  box-shadow: 0 12px 34px rgba(16,42,67,0.07);
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.model:hover { transform: translateY(-6px); box-shadow: var(--shadow); }
+
+.model-tag {
+  display: inline-flex;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 900;
+  color: white;
+  background: var(--blue);
+  margin-bottom: 16px;
+}
+
+.model:nth-child(2) .model-tag { background: var(--cyan); }
+.model:nth-child(3) .model-tag { background: var(--purple); }
+
+.model h3 {
+  font-size: 25px;
+  margin-bottom: 12px;
+}
+
+.model p {
+  color: var(--ink-2);
+  margin-bottom: 14px;
+}
+
+.model .example {
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.model .example strong { color: var(--ink); }
+
+/* CASE STUDIES */
+.case-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 26px;
+}
+
+.filter-btn {
+  border: 1px solid var(--line);
+  background: white;
+  color: var(--ink);
+  border-radius: 999px;
+  padding: 9px 14px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.filter-btn.active {
+  background: var(--ink);
+  color: white;
+}
+
+.case-grid {
+  display: grid;
+  gap: 18px;
+}
+
+.case-card {
+  display: grid;
+  grid-template-columns: 170px 1fr 210px;
+  gap: 22px;
+  align-items: stretch;
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  padding: 20px;
+  box-shadow: 0 12px 34px rgba(16,42,67,0.06);
+}
+
+.logo-box {
+  border-radius: 20px;
+  border: 1px solid var(--line);
+  background: #F8FAFC;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  font-weight: 1000;
+  letter-spacing: -0.04em;
+  min-height: 150px;
+}
+
+.logo-box.visa { color: #1A1F71; }
+.logo-box.mastercard { color: #EB001B; }
+.logo-box.stripe { color: #635BFF; }
+.logo-box.sama { color: #006C35; }
+
+.case-content h3 {
+  font-size: 24px;
+  margin-bottom: 8px;
+}
+
+.case-content p {
+  color: var(--ink-2);
+}
+
+.case-content .meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.pill {
+  display: inline-flex;
+  border-radius: 999px;
+  padding: 5px 10px;
+  font-weight: 900;
+  font-size: 12px;
+  background: #EEF2FF;
+  color: var(--blue);
+}
+
+.case-result {
+  border-left: 3px solid var(--blue);
+  padding-left: 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.case-result .big {
+  font-size: 34px;
+  font-weight: 1000;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.case-result .label {
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+/* CHARTS */
+.chart-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.chart-card {
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  padding: 26px;
+  box-shadow: 0 12px 34px rgba(16,42,67,0.06);
+}
+
+.chart-card h3 { margin-bottom: 20px; }
+
+.bars {
+  display: grid;
+  gap: 16px;
+}
+
+.bar-row {
+  display: grid;
+  grid-template-columns: 86px 1fr 90px;
+  gap: 12px;
+  align-items: center;
+  font-weight: 800;
+}
+
+.bar-track {
+  height: 16px;
+  border-radius: 999px;
+  background: #E2E8F0;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--blue), var(--cyan));
+}
+
+.bar-value {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.donut-wrap {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+
+.donut {
+  width: 165px;
+  height: 165px;
+  border-radius: 50%;
+  background: conic-gradient(var(--green) 0deg 115deg, var(--blue) 115deg 250deg, var(--amber) 250deg 318deg, var(--red) 318deg 360deg);
+  position: relative;
+  flex: 0 0 165px;
+}
+
+.donut::after {
+  content: "AI Stack";
+  position: absolute;
+  inset: 24px;
+  background: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-weight: 1000;
+  color: var(--ink);
+}
+
+.legend {
+  display: grid;
+  gap: 10px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--ink-2);
+  font-weight: 800;
+}
+
+.swatch {
+  width: 13px;
+  height: 13px;
+  border-radius: 4px;
+}
+
+/* TIMELINE */
+.timeline {
+  position: relative;
+  display: grid;
+  gap: 20px;
+}
+
+.tl-item {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  gap: 20px;
+  align-items: start;
+}
+
+.tl-year {
+  background: var(--ink);
+  color: white;
+  border-radius: 18px;
+  padding: 14px 8px;
+  text-align: center;
+  font-weight: 1000;
+}
+
+.tl-card {
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  padding: 20px;
+  box-shadow: 0 12px 34px rgba(16,42,67,0.06);
+}
+
+.tl-card h3 { margin-bottom: 6px; }
+.tl-card p { color: var(--ink-2); }
+
+/* CHALLENGES */
+.challenges-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+}
+
+.challenge {
+  border-radius: 24px;
+  padding: 26px;
+  background: white;
+  border: 1px solid var(--line);
+  box-shadow: 0 12px 34px rgba(16,42,67,0.06);
+  border-top: 5px solid var(--red);
+}
+
+.challenge:nth-child(2) { border-top-color: var(--amber); }
+.challenge:nth-child(3) { border-top-color: var(--purple); }
+
+.challenge h3 { margin-bottom: 10px; }
+.challenge p { color: var(--ink-2); }
+
+/* FOOTER */
+footer {
+  background: var(--ink);
+  color: white;
+  padding: 62px 0 34px;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 40px;
+}
+
+footer h3 { margin-bottom: 14px; }
+
+footer p, footer li {
+  color: rgba(255,255,255,0.74);
+  font-size: 14px;
+}
+
+.refs {
+  columns: 2;
+  column-gap: 28px;
+}
+
+.refs li {
+  break-inside: avoid;
+  margin-bottom: 9px;
+}
+
+.footer-bottom {
+  border-top: 1px solid rgba(255,255,255,0.12);
+  margin-top: 34px;
+  padding-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  color: rgba(255,255,255,0.60);
+  font-size: 13px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 950px) {
+  .hero-main, .compare-grid, .models-grid, .chart-grid, .footer-grid { grid-template-columns: 1fr; }
+  .stats { grid-template-columns: repeat(2, 1fr); }
+  .case-card { grid-template-columns: 1fr; }
+  .logo-box { min-height: 100px; }
+  .case-result { border-left: none; border-top: 3px solid var(--blue); padding-left: 0; padding-top: 16px; }
+  .challenges-grid { grid-template-columns: 1fr; }
+  .refs { columns: 1; }
+}
+
+@media (max-width: 600px) {
+  .container { width: min(100% - 28px, 1180px); }
+  .hero-top, .nav-inner { align-items: flex-start; flex-direction: column; }
+  .stats { grid-template-columns: 1fr; }
+  .bar-row { grid-template-columns: 1fr; }
+  .donut-wrap { flex-direction: column; align-items: flex-start; }
+  .tl-item { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="container hero-top">
+    <span>Advanced Deep Learning · Research Visual Summary</span>
+  </div>
+
+  <div class="container hero-main">
+    <div>
+      <div class="kicker">AI in Finance & Banking</div>
+      <h1>Can AI stop <span>credit card fraud</span> before payment completion?</h1>
+      <p class="hero-subtitle">
+        A one-page interactive summary of how predictive AI and generative AI are used to score transactions,
+        detect compromised cards, generate synthetic fraud data, and support real-time fraud prevention.
+      </p>
+      <div class="hero-actions">
+        <a class="btn primary" href="#cases">Explore Case Studies</a>
+        <a class="btn" href="#models">View AI Models</a>
+        <a class="btn" href="#references">Sources</a>
+      </div>
+    </div>
+
+    <div class="hero-visual" aria-label="Transaction risk scoring demo">
+      <div class="risk-card">
+        <div class="risk-head">
+          <div>
+            <div class="risk-title">Transaction Risk Score</div>
+            <div style="color:var(--muted);font-size:13px;">Real-time authorization layer</div>
+          </div>
+          <div class="risk-score">82%</div>
+        </div>
+        <div class="bar"><div></div></div>
+        <div class="signal-list">
+          <div class="signal"><span>Device mismatch</span><strong>High</strong></div>
+          <div class="signal"><span>Unusual merchant category</span><strong>Medium</strong></div>
+          <div class="signal"><span>Velocity pattern</span><strong>High</strong></div>
+          <div class="signal"><span>Card-not-present channel</span><strong>Elevated</strong></div>
+        </div>
+      </div>
+      <div class="decision">
+        <span><strong>Decision:</strong> Challenge or block before completion</span>
+        <span>⚡</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="container stats">
+    <div class="stat">
+      <div class="stat-num">$2.5<small>T</small></div>
+      <div class="stat-label">Global payments revenue in 2024, according to <a href="https://www.mckinsey.com/industries/financial-services/our-insights/global-payments-report" target="_blank" rel="noopener">McKinsey</a></div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">$33.83<small>B</small></div>
+      <div class="stat-label">Worldwide card fraud losses in 2023, according to <a href="https://nilsonreport.com/articles/card-fraud-losses-worldwide-2024/" target="_blank" rel="noopener">Nilson Report</a></div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">$40<small>B</small></div>
+      <div class="stat-label">Fraudulent transactions Visa says it prevented in 2023, reported by <a href="https://www.reuters.com/technology/cybersecurity/visa-prevented-40-bln-worth-fraudulent-transactions-2023-official-2024-07-23/" target="_blank" rel="noopener">Reuters</a></div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">32<small>%</small></div>
+      <div class="stat-label">Average fraud reduction claimed by <a href="https://stripe.com/radar" target="_blank" rel="noopener">Stripe Radar</a></div>
+    </div>
+  </div>
+</header>
+
+<nav class="nav">
+  <div class="container nav-inner">
+    <span class="nav-logo">AI × Fraud Detection</span>
+    <ul class="nav-links">
+      <li><a href="#overview">Overview</a></li>
+      <li><a href="#ai-types">AI Types</a></li>
+      <li><a href="#models">Models</a></li>
+      <li><a href="#cases">Case Studies</a></li>
+      <li><a href="#charts">Charts</a></li>
+      <li><a href="#future">Outlook</a></li>
+    </ul>
+  </div>
+</nav>
+
+<section id="overview">
+  <div class="container">
+    <div class="section-head">
+      <div class="eyebrow">01 · Research Overview</div>
+      <h2>Fraud detection is no longer just a rule-based problem.</h2>
+      <p>
+        Digital payments create speed and convenience, but they also increase opportunities for fraudsters.
+        Modern systems use machine learning to analyze transaction data, score risk, and support prevention before payment completion.
+      </p>
+    </div>
+    <div class="compare-grid">
+      <div class="compare-card">
+        <h3>Research Question</h3>
+        <p>Can a machine learning model detect a fraudulent credit card transaction before it is completed?</p>
+        <ul class="compare-list">
+          <li><strong>Focus:</strong> Real-time or near-real-time fraud prevention.</li>
+          <li><strong>Goal:</strong> Detect suspicious transactions before authorization or funds transfer.</li>
+          <li><strong>Trade-off:</strong> Catch fraud while minimizing false positives for legitimate customers.</li>
+        </ul>
+      </div>
+      <div class="compare-card">
+        <h3>Main Finding</h3>
+        <p>
+          Yes — ML systems can detect many fraudulent transactions before completion when they are integrated into real-time authorization
+          pipelines. However, performance depends on data quality, latency, monitoring, explainability, privacy, and regulatory governance.
+        </p>
+        <ul class="compare-list">
+          <li><strong>Evidence:</strong> Visa, Mastercard, Stripe, and SAMA case studies.</li>
+          <li><strong>Risk:</strong> Fraudsters also use automation and generative AI.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="ai-types">
+  <div class="container">
+    <div class="section-head">
+      <div class="eyebrow">02 · Predictive AI vs Generative AI</div>
+      <h2>Two AI approaches, different roles in fraud prevention.</h2>
+      <p>Predictive AI scores real transactions. Generative AI helps create synthetic data, predict compromised-card patterns, and support investigations.</p>
+    </div>
+
+    <div class="compare-grid">
+      <article class="compare-card predictive">
+        <h3>Predictive AI</h3>
+        <p>Uses historical labelled transactions to classify new payments as legitimate or fraudulent.</p>
+        <ul class="compare-list">
+          <li><strong>Output:</strong> Fraud probability, risk score, alert, or block decision.</li>
+          <li><strong>Examples:</strong> Gradient boosting, random forests, neural networks, LSTM, transformers.</li>
+          <li><strong>Strength:</strong> Mature and directly usable in real-time payment authorization.</li>
+          <li><strong>Limitation:</strong> Needs labelled data and can struggle with concept drift.</li>
+        </ul>
+      </article>
+
+      <article class="compare-card generative">
+        <h3>Generative AI</h3>
+        <p>Creates synthetic fraud data, simulates attack scenarios, or assists fraud analysts.</p>
+        <ul class="compare-list">
+          <li><strong>Output:</strong> Synthetic transactions, compromised-card predictions, reports, summaries.</li>
+          <li><strong>Examples:</strong> GANs, VAEs, diffusion models, LLMs.</li>
+          <li><strong>Strength:</strong> Useful for rare fraud patterns and investigation support.</li>
+          <li><strong>Limitation:</strong> Harder to validate and may create privacy or explainability risks.</li>
+        </ul>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="models" class="models">
+  <div class="container">
+    <div class="section-head">
+      <div class="eyebrow">03 · Model Families</div>
+      <h2>Three model types used in credit card fraud detection.</h2>
+      <p>Each model family solves a different problem: tabular risk scoring, transaction-sequence learning, and rare fraud data generation.</p>
+    </div>
+
+    <div class="models-grid">
+      <article class="model">
+        <span class="model-tag">Model 01</span>
+        <h3>Gradient Boosting & Ensembles</h3>
+        <p>Tree-based models such as XGBoost, LightGBM, CatBoost, and random forests are strong for structured transaction data.</p>
+        <p>They can learn complex interactions between merchant, amount, time, device, and behaviour signals.</p>
+        <div class="example"><strong>Best fit:</strong> Fast tabular risk scoring with some interpretability through feature importance.</div>
+      </article>
+
+      <article class="model">
+        <span class="model-tag">Model 02</span>
+        <h3>RNNs, LSTMs & Transformers</h3>
+        <p>Sequence models analyze transaction history, recent behaviour, and event order.</p>
+        <p>They are useful because fraud often appears as a sequence, such as small test purchases followed by a large transaction.</p>
+        <div class="example"><strong>Best fit:</strong> Account takeover, card testing, and time-based anomaly detection.</div>
+      </article>
+
+      <article class="model">
+        <span class="model-tag">Model 03</span>
+        <h3>GANs for Synthetic Fraud Data</h3>
+        <p>GANs can create synthetic examples of rare fraud patterns, helping models train on more balanced data.</p>
+        <p>They are promising but require careful validation to avoid unrealistic or privacy-risky synthetic data.</p>
+        <div class="example"><strong>Best fit:</strong> Data augmentation for imbalanced fraud datasets.</div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="cases">
+  <div class="container">
+    <div class="section-head">
+      <div class="eyebrow">04 · Real-World Case Studies</div>
+      <h2>How leading payment organizations use AI against fraud.</h2>
+      <p>Use the filters to focus on predictive AI, generative AI, or regulatory systems.</p>
+    </div>
+
+    <div class="case-tools">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="predictive">Predictive AI</button>
+      <button class="filter-btn" data-filter="generative">Generative AI</button>
+      <button class="filter-btn" data-filter="regulatory">Regulatory</button>
+    </div>
+
+    <div class="case-grid">
+      <article class="case-card" data-type="predictive generative">
+        <div class="logo-box visa">VISA</div>
+        <div class="case-content">
+          <h3>Visa</h3>
+          <p>Visa uses AI and network-level intelligence to prevent fraud and launched the VAAI Score to detect enumeration attacks using generative AI components.</p>
+          <div class="meta">
+            <span class="pill">Real-time risk scoring</span>
+            <span class="pill">VAAI Score</span>
+            <span class="pill">Enumeration attacks</span>
+          </div>
+        </div>
+        <div class="case-result">
+          <div class="big">$40B</div>
+          <div class="label">Fraudulent transactions prevented in 2023</div>
+        </div>
+      </article>
+
+      <article class="case-card" data-type="generative">
+        <div class="logo-box mastercard">Mastercard</div>
+        <div class="case-content">
+          <h3>Mastercard</h3>
+          <p>Mastercard announced generative AI technology that scans transaction data across billions of cards and millions of merchants to detect compromised cards faster.</p>
+          <div class="meta">
+            <span class="pill">Generative AI</span>
+            <span class="pill">Compromised-card detection</span>
+            <span class="pill">Merchant risk</span>
+          </div>
+        </div>
+        <div class="case-result">
+          <div class="big">2×</div>
+          <div class="label">Detection rate for compromised cards, according to <a href="https://www.mastercard.com/us/en/news-and-trends/press/2024/may/mastercard-accelerates-card-fraud-detection-with-generative-ai-technology.html" target="_blank" rel="noopener">Mastercard</a></div>
+        </div>
+      </article>
+
+      <article class="case-card" data-type="predictive">
+        <div class="logo-box stripe">stripe</div>
+        <div class="case-content">
+          <h3>Stripe Radar</h3>
+          <p>Stripe Radar uses AI trained on large-scale payment data to assign risk scores, scan payments and accounts, and automatically block high-risk transactions.</p>
+          <div class="meta">
+            <span class="pill">Risk scoring</span>
+            <span class="pill">Network signals</span>
+            <span class="pill">Automated blocking</span>
+          </div>
+        </div>
+        <div class="case-result">
+          <div class="big">32%</div>
+          <div class="label">Average fraud reduction claimed by <a href="https://stripe.com/radar" target="_blank" rel="noopener">Stripe Radar</a></div>
+        </div>
+      </article>
+
+      <article class="case-card" data-type="regulatory predictive">
+        <div class="logo-box sama">SAMA</div>
+        <div class="case-content">
+          <h3>Saudi Central Bank / SAMA</h3>
+          <p>SAMA’s Counter-Fraud Framework requires financial organizations to maintain fraud detection systems, operate them 24/7, and use timely data for intervention.</p>
+          <div class="meta">
+            <span class="pill">24/7 monitoring</span>
+            <span class="pill">Anomaly detection</span>
+            <span class="pill">AI/ML capability</span>
+          </div>
+        </div>
+        <div class="case-result">
+          <div class="big">24/7</div>
+          <div class="label">Fraud detection operation requirement from <a href="https://rulebook.sama.gov.sa/en/52-fraud-detection-systems" target="_blank" rel="noopener">SAMA Rulebook</a></div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="charts">
+  <div class="container">
+    <div class="section-head">
+      <div class="eyebrow">05 · Charts & Key Data</div>
+      <h2>Key figures from the research.</h2>
+      <p>These visuals summarize why fraud detection is a high-impact AI use case in finance.</p>
+    </div>
+
+    <div class="chart-grid">
+      <div class="chart-card">
+        <h3>Fraud and payments scale</h3>
+        <div class="bars">
+          <div class="bar-row">
+            <span>Payments</span>
+            <div class="bar-track"><div class="bar-fill" style="width:100%"></div></div>
+            <span class="bar-value">$2.5T revenue</span>
+          </div>
+          <div class="bar-row">
+            <span>Card fraud</span>
+            <div class="bar-track"><div class="bar-fill" style="width:68%"></div></div>
+            <span class="bar-value">$33.83B losses</span>
+          </div>
+          <div class="bar-row">
+            <span>Visa blocked</span>
+            <div class="bar-track"><div class="bar-fill" style="width:80%"></div></div>
+            <span class="bar-value">$40B prevented</span>
+          </div>
+          <div class="bar-row">
+            <span>FTC losses</span>
+            <div class="bar-track"><div class="bar-fill" style="width:42%"></div></div>
+            <span class="bar-value">$12.5B reported</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <h3>Fraud AI stack</h3>
+        <div class="donut-wrap">
+          <div class="donut"></div>
+          <div class="legend">
+            <div class="legend-item"><span class="swatch" style="background:var(--green)"></span>Predictive scoring</div>
+            <div class="legend-item"><span class="swatch" style="background:var(--blue)"></span>Sequence models</div>
+            <div class="legend-item"><span class="swatch" style="background:var(--amber)"></span>Generative AI</div>
+            <div class="legend-item"><span class="swatch" style="background:var(--red)"></span>Regulatory governance</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="future">
+  <div class="container">
+    <div class="section-head">
+      <div class="eyebrow">06 · Five-Year Outlook</div>
+      <h2>Where AI fraud detection is heading next.</h2>
+      <p>Fraud prevention will become more real-time, more AI-native, and more closely connected with cybersecurity and compliance.</p>
+    </div>
+
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-year">2024</div>
+        <div class="tl-card">
+          <h3>Generative AI enters payment fraud systems</h3>
+          <p>Visa and Mastercard announced generative-AI-based systems for enumeration attack scoring and compromised-card detection.</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">2025</div>
+        <div class="tl-card">
+          <h3>Fraud investigation support expands</h3>
+          <p>LLM-based frameworks start to support analysts by summarizing evidence and assisting fraud investigations.</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">2026–2028</div>
+        <div class="tl-card">
+          <h3>More real-time and cross-channel detection</h3>
+          <p>Systems combine payment data, device signals, account behaviour, merchant intelligence, and cybersecurity alerts.</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">2030</div>
+        <div class="tl-card">
+          <h3>AI-native fraud prevention</h3>
+          <p>Fraud detection becomes a continuous governance process: adaptive models, synthetic data, explainability, and human oversight.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="challenges">
+  <div class="container">
+    <div class="section-head">
+      <div class="eyebrow">07 · Challenges</div>
+      <h2>The main risks are not only technical.</h2>
+      <p>Fraud systems must balance accuracy, speed, fairness, privacy, explainability, and regulatory requirements.</p>
+    </div>
+
+    <div class="challenges-grid">
+      <article class="challenge">
+        <h3>Technical</h3>
+        <p>Class imbalance, concept drift, verification latency, and real-time scoring requirements make fraud detection difficult.</p>
+      </article>
+      <article class="challenge">
+        <h3>Ethical</h3>
+        <p>Models may create unfair blocks, use sensitive behavioural data, or become too opaque for customers and analysts.</p>
+      </article>
+      <article class="challenge">
+        <h3>Regulatory</h3>
+        <p>GDPR, EU AI Act governance, SAMA rules, and banking supervision require careful data handling and oversight.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<footer id="references">
+  <div class="container footer-grid">
+    <div>
+      <h3>Conclusion</h3>
+      <p>
+        ML models can detect many fraudulent transactions before completion when they are connected to real-time authorization systems.
+        The strongest future approach combines predictive AI, generative AI support, network intelligence, privacy protection, and human governance.
+      </p>
+    </div>
+
+    <div>
+      <h3>Selected Sources</h3>
+      <ul class="refs">
+        <li><a href="https://www.mckinsey.com/industries/financial-services/our-insights/global-payments-report" target="_blank" rel="noopener">McKinsey & Company — The 2025 Global Payments Report</a></li>
+        <li><a href="https://nilsonreport.com/articles/card-fraud-losses-worldwide-2024/" target="_blank" rel="noopener">Nilson Report — Card Fraud Losses Worldwide</a></li>
+        <li><a href="https://www.ftc.gov/news-events/news/press-releases/2025/03/new-ftc-data-show-big-jump-reported-losses-fraud-125-billion-2024" target="_blank" rel="noopener">Federal Trade Commission — 2024 fraud losses</a></li>
+        <li><a href="https://arxiv.org/abs/2010.06479" target="_blank" rel="noopener">Lucas & Jurgovsky — Credit Card Fraud Detection Survey</a></li>
+        <li><a href="https://stripe.com/radar" target="_blank" rel="noopener">Stripe Radar — Payment and Credit Card Fraud Detection</a></li>
+        <li><a href="https://www.reuters.com/technology/cybersecurity/visa-prevented-40-bln-worth-fraudulent-transactions-2023-official-2024-07-23/" target="_blank" rel="noopener">Reuters — Visa prevented $40B in fraudulent transactions</a></li>
+        <li><a href="https://www.mastercard.com/us/en/news-and-trends/press/2024/may/mastercard-accelerates-card-fraud-detection-with-generative-ai-technology.html" target="_blank" rel="noopener">Mastercard — Generative AI fraud detection</a></li>
+        <li><a href="https://investor.visa.com/news/news-details/2024/Visa-Announces-Generative-AI-Powered-Fraud-Solution-to-Combat-Account-Attacks/default.aspx" target="_blank" rel="noopener">Visa — VAAI Score for account attacks</a></li>
+        <li><a href="https://rulebook.sama.gov.sa/en/52-fraud-detection-systems" target="_blank" rel="noopener">SAMA Rulebook — Fraud Detection Systems</a></li>
+        <li><a href="https://eur-lex.europa.eu/eli/reg/2024/1689/oj" target="_blank" rel="noopener">EU AI Act</a> and <a href="https://eur-lex.europa.eu/eli/reg/2016/679/oj" target="_blank" rel="noopener">GDPR</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="container footer-bottom">
+    <span>AI in Finance & Banking: Credit Card Fraud Detection</span>
+    <span>Advanced Deep Learning · 2026</span>
+  </div>
+</footer>
+
+<script>
+const filterButtons = document.querySelectorAll('.filter-btn');
+const caseCards = document.querySelectorAll('.case-card');
+
+filterButtons.forEach(button => {
+  button.addEventListener('click', () => {
+    filterButtons.forEach(btn => btn.classList.remove('active'));
+    button.classList.add('active');
+
+    const filter = button.dataset.filter;
+    caseCards.forEach(card => {
+      if (filter === 'all' || card.dataset.type.includes(filter)) {
+        card.style.display = 'grid';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  });
+});
+
+document.querySelectorAll('.nav-links a, .hero-actions a').forEach(link => {
+  link.addEventListener('click', e => {
+    const targetId = link.getAttribute('href');
+    if (!targetId || !targetId.startsWith('#')) return;
+    const target = document.querySelector(targetId);
+    if (!target) return;
+    e.preventDefault();
+    window.scrollTo({
+      top: target.offsetTop - 72,
+      behavior: 'smooth'
+    });
+  });
+});
+</script>
+</body>
+</html>
