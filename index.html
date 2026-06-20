@@ -1,0 +1,1464 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>الذكاء الاصطناعي في التمويل والخدمات المصرفية | كشف الاحتيال في بطاقات الائتمان</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900;1000&family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --ink: #102A43;
+  --ink-2: #243B53;
+  --muted: #627D98;
+  --paper: #F7FAFC;
+  --card: #FFFFFF;
+  --line: rgba(16, 42, 67, 0.12);
+  --blue: #2563EB;
+  --cyan: #0891B2;
+  --green: #059669;
+  --amber: #D97706;
+  --red: #DC2626;
+  --purple: #7C3AED;
+  --shadow: 0 18px 50px rgba(16, 42, 67, 0.10);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: "Cairo", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background:
+    radial-gradient(circle at 10% 0%, rgba(37, 99, 235, 0.12), transparent 32%),
+    radial-gradient(circle at 90% 20%, rgba(8, 145, 178, 0.10), transparent 30%),
+    var(--paper);
+  color: var(--ink);
+  line-height: 1.75;
+  overflow-x: hidden;
+}
+
+html[lang="en"] body {
+  font-family: "Inter", "Cairo", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+a { color: inherit; }
+
+.container {
+  width: min(1180px, calc(100% - 40px));
+  margin: 0 auto;
+}
+
+/* LANGUAGE TOGGLE */
+.lang-toggle {
+  position: fixed;
+  top: 14px;
+  inset-inline-end: 16px;
+  z-index: 200;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,0.9);
+  color: var(--ink);
+  border-radius: 999px;
+  padding: 9px 15px;
+  font-family: inherit;
+  font-weight: 900;
+  font-size: 14px;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(16,42,67,0.12);
+  backdrop-filter: blur(12px);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.lang-toggle:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 8px 14px;
+  background: rgba(255,255,255,0.78);
+  color: var(--ink-2);
+  font-size: 13px;
+  font-weight: 700;
+  backdrop-filter: blur(12px);
+}
+
+.badge .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 0 5px rgba(5, 150, 105, 0.13);
+}
+
+/* HERO */
+.hero {
+  min-height: 92vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 34px 0 56px;
+}
+
+.hero-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  color: var(--muted);
+  font-size: 13px;
+  letter-spacing: 0.04em;
+}
+
+.hero-main {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 48px;
+  align-items: center;
+  padding: 70px 0;
+}
+
+.kicker {
+  color: var(--blue);
+  letter-spacing: 0.04em;
+  font-weight: 900;
+  font-size: 13px;
+  margin-bottom: 18px;
+}
+
+h1 {
+  font-size: clamp(42px, 6vw, 72px);
+  line-height: 1.18;
+  letter-spacing: normal;
+  color: var(--ink);
+  margin-bottom: 26px;
+}
+
+html[lang="en"] h1 { letter-spacing: -0.02em; }
+
+h1 span {
+  background: linear-gradient(90deg, var(--blue), var(--cyan));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.hero-subtitle {
+  font-size: 21px;
+  color: var(--ink-2);
+  max-width: 760px;
+  margin-bottom: 28px;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 46px;
+  padding: 0 18px;
+  border-radius: 12px;
+  text-decoration: none;
+  font-weight: 800;
+  font-size: 14px;
+  border: 1px solid var(--line);
+  background: white;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.btn.primary {
+  color: white;
+  background: linear-gradient(135deg, var(--blue), var(--cyan));
+  border: none;
+  box-shadow: 0 16px 40px rgba(37, 99, 235, 0.25);
+}
+
+.btn:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+
+.hero-visual {
+  position: relative;
+  padding: 28px;
+  border-radius: 28px;
+  background: rgba(255,255,255,0.72);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(18px);
+}
+
+.risk-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  padding: 22px;
+  margin-bottom: 16px;
+  box-shadow: 0 10px 28px rgba(16,42,67,0.08);
+}
+
+.risk-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.risk-title {
+  font-weight: 900;
+  color: var(--ink);
+}
+
+.risk-score {
+  font-weight: 1000;
+  font-size: 36px;
+  color: var(--red);
+  line-height: 1;
+}
+
+.bar {
+  height: 11px;
+  background: #E2E8F0;
+  border-radius: 999px;
+  overflow: hidden;
+  margin: 12px 0 12px;
+}
+
+.bar > div {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--green), var(--amber), var(--red));
+  width: 82%;
+}
+
+.signal-list {
+  display: grid;
+  gap: 10px;
+  font-size: 14px;
+  color: var(--ink-2);
+}
+
+.signal {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.signal strong { color: var(--ink); }
+
+.decision {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border-radius: 18px;
+  background: #FFF7ED;
+  border: 1px solid rgba(217,119,6,0.25);
+  padding: 16px 18px;
+}
+
+.decision strong { color: var(--amber); }
+
+/* STATS */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+}
+
+.stat {
+  background: rgba(255,255,255,0.80);
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  padding: 22px;
+  min-height: 145px;
+  box-shadow: 0 10px 30px rgba(16,42,67,0.06);
+}
+
+.stat-num {
+  font-size: 42px;
+  line-height: 1;
+  font-weight: 1000;
+  letter-spacing: normal;
+  color: var(--ink);
+  direction: ltr;
+  text-align: start;
+}
+
+.stat-num small {
+  font-size: 18px;
+  color: var(--blue);
+  letter-spacing: normal;
+}
+
+.stat-label {
+  margin-top: 12px;
+  color: var(--muted);
+  font-weight: 700;
+  font-size: 13px;
+}
+
+/* NAV */
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(247,250,252,0.86);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  backdrop-filter: blur(18px);
+}
+
+.nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 14px 0;
+}
+
+.nav-logo {
+  font-weight: 1000;
+  color: var(--ink);
+}
+
+.nav-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  list-style: none;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: var(--ink-2);
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.nav-links a:hover { color: var(--blue); }
+
+/* SECTIONS */
+section { padding: 92px 0; }
+
+.section-head {
+  max-width: 850px;
+  margin-bottom: 48px;
+}
+
+.eyebrow {
+  color: var(--blue);
+  letter-spacing: 0.04em;
+  font-size: 12px;
+  font-weight: 1000;
+  margin-bottom: 12px;
+}
+
+h2 {
+  font-size: clamp(30px, 4vw, 50px);
+  line-height: 1.25;
+  letter-spacing: normal;
+  margin-bottom: 16px;
+}
+
+html[lang="en"] h2 { letter-spacing: -0.01em; }
+
+.section-head p {
+  font-size: 18px;
+  color: var(--muted);
+}
+
+/* COMPARISON */
+.compare-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+}
+
+.compare-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  padding: 28px;
+  box-shadow: 0 12px 34px rgba(16,42,67,0.07);
+}
+
+.compare-card h3 {
+  font-size: 25px;
+  margin-bottom: 8px;
+}
+
+.compare-card.predictive { border-top: 5px solid var(--blue); }
+.compare-card.generative { border-top: 5px solid var(--purple); }
+
+.compare-list {
+  margin-top: 18px;
+  display: grid;
+  gap: 12px;
+  list-style: none;
+}
+
+.compare-list li {
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: #F8FAFC;
+  border: 1px solid var(--line);
+  color: var(--ink-2);
+}
+
+.compare-list strong { color: var(--ink); }
+
+/* MODELS */
+.models {
+  background: #EFF6FF;
+  border-top: 1px solid rgba(37,99,235,0.12);
+  border-bottom: 1px solid rgba(37,99,235,0.12);
+}
+
+.models-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+}
+
+.model {
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  padding: 26px;
+  min-height: 360px;
+  box-shadow: 0 12px 34px rgba(16,42,67,0.07);
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.model:hover { transform: translateY(-6px); box-shadow: var(--shadow); }
+
+.model-tag {
+  display: inline-flex;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 900;
+  color: white;
+  background: var(--blue);
+  margin-bottom: 16px;
+}
+
+.model:nth-child(2) .model-tag { background: var(--cyan); }
+.model:nth-child(3) .model-tag { background: var(--purple); }
+
+.model h3 {
+  font-size: 25px;
+  margin-bottom: 12px;
+}
+
+.model p {
+  color: var(--ink-2);
+  margin-bottom: 14px;
+}
+
+.model .example {
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.model .example strong { color: var(--ink); }
+
+/* CASE STUDIES */
+.case-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 26px;
+}
+
+.filter-btn {
+  border: 1px solid var(--line);
+  background: white;
+  color: var(--ink);
+  border-radius: 999px;
+  padding: 9px 14px;
+  font-weight: 900;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 14px;
+}
+
+.filter-btn.active {
+  background: var(--ink);
+  color: white;
+}
+
+.case-grid {
+  display: grid;
+  gap: 18px;
+}
+
+.case-card {
+  display: grid;
+  grid-template-columns: 170px 1fr 210px;
+  gap: 22px;
+  align-items: stretch;
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  padding: 20px;
+  box-shadow: 0 12px 34px rgba(16,42,67,0.06);
+}
+
+.logo-box {
+  border-radius: 20px;
+  border: 1px solid var(--line);
+  background: #F8FAFC;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  font-weight: 1000;
+  letter-spacing: -0.04em;
+  min-height: 150px;
+}
+
+.logo-box.visa { color: #1A1F71; }
+.logo-box.mastercard { color: #EB001B; }
+.logo-box.stripe { color: #635BFF; }
+.logo-box.sama { color: #006C35; }
+
+.case-content h3 {
+  font-size: 24px;
+  margin-bottom: 8px;
+}
+
+.case-content p {
+  color: var(--ink-2);
+}
+
+.case-content .meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.pill {
+  display: inline-flex;
+  border-radius: 999px;
+  padding: 5px 10px;
+  font-weight: 900;
+  font-size: 12px;
+  background: #EEF2FF;
+  color: var(--blue);
+}
+
+.case-result {
+  border-inline-start: 3px solid var(--blue);
+  padding-inline-start: 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.case-result .big {
+  font-size: 34px;
+  font-weight: 1000;
+  line-height: 1;
+  letter-spacing: normal;
+  direction: ltr;
+  text-align: start;
+}
+
+.case-result .label {
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+/* CHARTS */
+.chart-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.chart-card {
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  padding: 26px;
+  box-shadow: 0 12px 34px rgba(16,42,67,0.06);
+}
+
+.chart-card h3 { margin-bottom: 20px; }
+
+.bars {
+  display: grid;
+  gap: 16px;
+}
+
+.bar-row {
+  display: grid;
+  grid-template-columns: 96px 1fr 110px;
+  gap: 12px;
+  align-items: center;
+  font-weight: 800;
+}
+
+.bar-track {
+  height: 16px;
+  border-radius: 999px;
+  background: #E2E8F0;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--blue), var(--cyan));
+}
+
+.bar-value {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.donut-wrap {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+
+.donut {
+  width: 165px;
+  height: 165px;
+  border-radius: 50%;
+  background: conic-gradient(var(--green) 0deg 115deg, var(--blue) 115deg 250deg, var(--amber) 250deg 318deg, var(--red) 318deg 360deg);
+  position: relative;
+  flex: 0 0 165px;
+}
+
+.donut::after {
+  content: attr(data-label);
+  position: absolute;
+  inset: 24px;
+  background: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-weight: 1000;
+  color: var(--ink);
+}
+
+.legend {
+  display: grid;
+  gap: 10px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--ink-2);
+  font-weight: 800;
+}
+
+.swatch {
+  width: 13px;
+  height: 13px;
+  border-radius: 4px;
+}
+
+/* TIMELINE */
+.timeline {
+  position: relative;
+  display: grid;
+  gap: 20px;
+}
+
+.tl-item {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  gap: 20px;
+  align-items: start;
+}
+
+.tl-year {
+  background: var(--ink);
+  color: white;
+  border-radius: 18px;
+  padding: 14px 8px;
+  text-align: center;
+  font-weight: 1000;
+  direction: ltr;
+}
+
+.tl-card {
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  padding: 20px;
+  box-shadow: 0 12px 34px rgba(16,42,67,0.06);
+}
+
+.tl-card h3 { margin-bottom: 6px; }
+.tl-card p { color: var(--ink-2); }
+
+/* CHALLENGES */
+.challenges-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+}
+
+.challenge {
+  border-radius: 24px;
+  padding: 26px;
+  background: white;
+  border: 1px solid var(--line);
+  box-shadow: 0 12px 34px rgba(16,42,67,0.06);
+  border-top: 5px solid var(--red);
+}
+
+.challenge:nth-child(2) { border-top-color: var(--amber); }
+.challenge:nth-child(3) { border-top-color: var(--purple); }
+
+.challenge h3 { margin-bottom: 10px; }
+.challenge p { color: var(--ink-2); }
+
+/* FOOTER */
+footer {
+  background: var(--ink);
+  color: white;
+  padding: 62px 0 34px;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 40px;
+}
+
+footer h3 { margin-bottom: 14px; }
+
+footer p, footer li {
+  color: rgba(255,255,255,0.74);
+  font-size: 14px;
+}
+
+.refs {
+  columns: 2;
+  column-gap: 28px;
+}
+
+.refs li {
+  break-inside: avoid;
+  margin-bottom: 9px;
+}
+
+.footer-bottom {
+  border-top: 1px solid rgba(255,255,255,0.12);
+  margin-top: 34px;
+  padding-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  color: rgba(255,255,255,0.60);
+  font-size: 13px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 950px) {
+  .hero-main, .compare-grid, .models-grid, .chart-grid, .footer-grid { grid-template-columns: 1fr; }
+  .stats { grid-template-columns: repeat(2, 1fr); }
+  .case-card { grid-template-columns: 1fr; }
+  .logo-box { min-height: 100px; }
+  .case-result { border-inline-start: none; border-block-start: 3px solid var(--blue); padding-inline-start: 0; padding-block-start: 16px; }
+  .challenges-grid { grid-template-columns: 1fr; }
+  .refs { columns: 1; }
+}
+
+@media (max-width: 600px) {
+  .container { width: min(100% - 28px, 1180px); }
+  .hero-top, .nav-inner { align-items: flex-start; flex-direction: column; }
+  .stats { grid-template-columns: 1fr; }
+  .bar-row { grid-template-columns: 1fr; }
+  .donut-wrap { flex-direction: column; align-items: flex-start; }
+  .tl-item { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<button class="lang-toggle" id="langToggle" type="button" aria-label="Switch language">English</button>
+
+<header class="hero">
+  <div class="container hero-top">
+    <span data-i18n="hero_top">التعلم العميق المتقدم · ملخص بصري للبحث</span>
+  </div>
+
+  <div class="container hero-main">
+    <div>
+      <div class="kicker" data-i18n="kicker">الذكاء الاصطناعي في التمويل والخدمات المصرفية</div>
+      <h1 data-i18n="h1">هل يستطيع الذكاء الاصطناعي إيقاف <span>الاحتيال في بطاقات الائتمان</span> قبل إتمام الدفع؟</h1>
+      <p class="hero-subtitle" data-i18n="subtitle">
+        ملخص تفاعلي من صفحة واحدة يوضح كيف يُستخدم الذكاء الاصطناعي التنبؤي والذكاء الاصطناعي التوليدي لتقييم
+        المعاملات، وكشف البطاقات المخترقة، وتوليد بيانات احتيال اصطناعية، ودعم منع الاحتيال في الوقت الفعلي.
+      </p>
+      <div class="hero-actions">
+        <a class="btn primary" href="#cases" data-i18n="btn_cases">استكشف دراسات الحالة</a>
+        <a class="btn" href="#models" data-i18n="btn_models">عرض نماذج الذكاء الاصطناعي</a>
+        <a class="btn" href="#references" data-i18n="btn_sources">المصادر</a>
+      </div>
+    </div>
+
+    <div class="hero-visual" id="heroVisual">
+      <div class="risk-card">
+        <div class="risk-head">
+          <div>
+            <div class="risk-title" data-i18n="risk_title">درجة مخاطر المعاملة</div>
+            <div style="color:var(--muted);font-size:13px;" data-i18n="risk_sub">طبقة التفويض في الوقت الفعلي</div>
+          </div>
+          <div class="risk-score">82%</div>
+        </div>
+        <div class="bar"><div></div></div>
+        <div class="signal-list">
+          <div class="signal"><span data-i18n="sig1">عدم تطابق الجهاز</span><strong data-i18n="sig1v">مرتفع</strong></div>
+          <div class="signal"><span data-i18n="sig2">فئة تاجر غير معتادة</span><strong data-i18n="sig2v">متوسط</strong></div>
+          <div class="signal"><span data-i18n="sig3">نمط تسارع المعاملات (Velocity)</span><strong data-i18n="sig3v">مرتفع</strong></div>
+          <div class="signal"><span data-i18n="sig4">قناة دون حضور البطاقة (Card-not-present)</span><strong data-i18n="sig4v">مرتفع نسبيًا</strong></div>
+        </div>
+      </div>
+      <div class="decision">
+        <span data-i18n="decision"><strong>القرار:</strong> التحقق أو الحظر قبل الإتمام</span>
+        <span>⚡</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="container stats">
+    <div class="stat">
+      <div class="stat-num">$2.5<small>T</small></div>
+      <div class="stat-label" data-i18n="stat1">إيرادات المدفوعات العالمية في 2024، وفقًا لـ <a href="https://www.mckinsey.com/industries/financial-services/our-insights/global-payments-report" target="_blank" rel="noopener">McKinsey</a></div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">$33.83<small>B</small></div>
+      <div class="stat-label" data-i18n="stat2">خسائر الاحتيال في البطاقات حول العالم في 2023، وفقًا لـ <a href="https://nilsonreport.com/articles/card-fraud-losses-worldwide-2024/" target="_blank" rel="noopener">Nilson Report</a></div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">$40<small>B</small></div>
+      <div class="stat-label" data-i18n="stat3">معاملات احتيالية تقول Visa إنها منعتها في 2023، حسب <a href="https://www.reuters.com/technology/cybersecurity/visa-prevented-40-bln-worth-fraudulent-transactions-2023-official-2024-07-23/" target="_blank" rel="noopener">Reuters</a></div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">32<small>%</small></div>
+      <div class="stat-label" data-i18n="stat4">متوسط انخفاض الاحتيال الذي تذكره <a href="https://stripe.com/radar" target="_blank" rel="noopener">Stripe Radar</a></div>
+    </div>
+  </div>
+</header>
+
+<nav class="nav">
+  <div class="container nav-inner">
+    <span class="nav-logo" data-i18n="nav_logo">الذكاء الاصطناعي × كشف الاحتيال</span>
+    <ul class="nav-links">
+      <li><a href="#overview" data-i18n="nav_overview">نظرة عامة</a></li>
+      <li><a href="#ai-types" data-i18n="nav_types">أنواع الذكاء الاصطناعي</a></li>
+      <li><a href="#models" data-i18n="nav_models">النماذج</a></li>
+      <li><a href="#cases" data-i18n="nav_cases">دراسات الحالة</a></li>
+      <li><a href="#charts" data-i18n="nav_charts">الرسوم البيانية</a></li>
+      <li><a href="#future" data-i18n="nav_future">النظرة المستقبلية</a></li>
+    </ul>
+  </div>
+</nav>
+
+<section id="overview">
+  <div class="container">
+    <div class="section-head">
+      <div class="eyebrow" data-i18n="ov_eyebrow">01 · نظرة عامة على البحث</div>
+      <h2 data-i18n="ov_h2">لم يعد كشف الاحتيال مجرد مشكلة قائمة على القواعد.</h2>
+      <p data-i18n="ov_p">
+        تخلق المدفوعات الرقمية سرعة وراحة، لكنها تزيد أيضًا من فرص المحتالين.
+        تستخدم الأنظمة الحديثة تعلّم الآلة لتحليل بيانات المعاملات، وتقييم المخاطر، ودعم المنع قبل إتمام الدفع.
+      </p>
+    </div>
+    <div class="compare-grid">
+      <div class="compare-card">
+        <h3 data-i18n="ov_q_h">سؤال البحث</h3>
+        <p data-i18n="ov_q_p">هل يستطيع نموذج تعلّم آلة كشف معاملة احتيالية ببطاقة ائتمان قبل إتمامها؟</p>
+        <ul class="compare-list">
+          <li data-i18n="ov_q_l1"><strong>التركيز:</strong> منع الاحتيال في الوقت الفعلي أو شبه الفعلي.</li>
+          <li data-i18n="ov_q_l2"><strong>الهدف:</strong> كشف المعاملات المشبوهة قبل التفويض أو تحويل الأموال.</li>
+          <li data-i18n="ov_q_l3"><strong>المفاضلة:</strong> ضبط الاحتيال مع تقليل الإنذارات الخاطئة للعملاء الشرعيين.</li>
+        </ul>
+      </div>
+      <div class="compare-card">
+        <h3 data-i18n="ov_f_h">النتيجة الرئيسية</h3>
+        <p data-i18n="ov_f_p">
+          نعم — تستطيع أنظمة تعلّم الآلة كشف الكثير من المعاملات الاحتيالية قبل إتمامها عند دمجها في مسارات
+          التفويض في الوقت الفعلي. لكن الأداء يعتمد على جودة البيانات، وزمن الاستجابة، والمراقبة، وقابلية التفسير، والخصوصية، والحوكمة التنظيمية (Governance).
+        </p>
+        <ul class="compare-list">
+          <li data-i18n="ov_f_l1"><strong>الأدلة:</strong> دراسات حالة Visa وMastercard وStripe والبنك المركزي السعودي (ساما).</li>
+          <li data-i18n="ov_f_l2"><strong>المخاطرة:</strong> يستخدم المحتالون أيضًا الأتمتة والذكاء الاصطناعي التوليدي.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="ai-types">
+  <div class="container">
+    <div class="section-head">
+      <div class="eyebrow" data-i18n="at_eyebrow">02 · الذكاء الاصطناعي التنبؤي مقابل التوليدي</div>
+      <h2 data-i18n="at_h2">نهجان للذكاء الاصطناعي بدورين مختلفين في منع الاحتيال.</h2>
+      <p data-i18n="at_p">يقيّم الذكاء الاصطناعي التنبؤي المعاملات الحقيقية. ويساعد الذكاء الاصطناعي التوليدي في إنشاء بيانات اصطناعية، والتنبؤ بأنماط البطاقات المخترقة، ودعم التحقيقات.</p>
+    </div>
+
+    <div class="compare-grid">
+      <article class="compare-card predictive">
+        <h3 data-i18n="at_pred_h">الذكاء الاصطناعي التنبؤي</h3>
+        <p data-i18n="at_pred_p">يستخدم معاملات تاريخية مُصنّفة لتصنيف المدفوعات الجديدة كشرعية أو احتيالية.</p>
+        <ul class="compare-list">
+          <li data-i18n="at_pred_l1"><strong>المخرجات:</strong> احتمال الاحتيال، درجة المخاطر (Risk Score)، تنبيه، أو قرار حظر.</li>
+          <li data-i18n="at_pred_l2"><strong>أمثلة:</strong> التعزيز التدرجي (Gradient Boosting)، الغابات العشوائية (Random Forests)، الشبكات العصبية (Neural Networks)، LSTM، المحوّلات (Transformers).</li>
+          <li data-i18n="at_pred_l3"><strong>نقطة القوة:</strong> ناضج وقابل للاستخدام المباشر في تفويض المدفوعات في الوقت الفعلي.</li>
+          <li data-i18n="at_pred_l4"><strong>القيود:</strong> يحتاج إلى بيانات مُصنّفة وقد يعاني من انحراف المفهوم (Concept Drift).</li>
+        </ul>
+      </article>
+
+      <article class="compare-card generative">
+        <h3 data-i18n="at_gen_h">الذكاء الاصطناعي التوليدي</h3>
+        <p data-i18n="at_gen_p">ينشئ بيانات احتيال اصطناعية، أو يحاكي سيناريوهات الهجمات، أو يساعد محللي الاحتيال.</p>
+        <ul class="compare-list">
+          <li data-i18n="at_gen_l1"><strong>المخرجات:</strong> معاملات اصطناعية، تنبؤات بالبطاقات المخترقة، تقارير، وملخصات.</li>
+          <li data-i18n="at_gen_l2"><strong>أمثلة:</strong> الشبكات التوليدية التنافسية (GANs)، المُرمّزات التلقائية التغايرية (VAEs)، نماذج الانتشار، النماذج اللغوية الكبيرة (LLMs).</li>
+          <li data-i18n="at_gen_l3"><strong>نقطة القوة:</strong> مفيد لأنماط الاحتيال النادرة ودعم التحقيقات.</li>
+          <li data-i18n="at_gen_l4"><strong>القيود:</strong> أصعب في التحقق وقد ينشئ مخاطر تتعلق بالخصوصية أو قابلية التفسير.</li>
+        </ul>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="models" class="models">
+  <div class="container">
+    <div class="section-head">
+      <div class="eyebrow" data-i18n="md_eyebrow">03 · عائلات النماذج</div>
+      <h2 data-i18n="md_h2">ثلاثة أنواع من النماذج تُستخدم في كشف الاحتيال ببطاقات الائتمان.</h2>
+      <p data-i18n="md_p">تحل كل عائلة نماذج مشكلة مختلفة: تقييم المخاطر الجدولي، وتعلّم تسلسل المعاملات، وتوليد بيانات الاحتيال النادرة.</p>
+    </div>
+
+    <div class="models-grid">
+      <article class="model">
+        <span class="model-tag" data-i18n="md1_tag">النموذج 01</span>
+        <h3 data-i18n="md1_h">التعزيز التدرجي والنماذج المجمّعة (Gradient Boosting &amp; Ensembles)</h3>
+        <p data-i18n="md1_p1">النماذج القائمة على الأشجار مثل XGBoost وLightGBM وCatBoost والغابات العشوائية قوية مع بيانات المعاملات المنظمة.</p>
+        <p data-i18n="md1_p2">يمكنها تعلّم التفاعلات المعقدة بين التاجر والمبلغ والوقت والجهاز وإشارات السلوك.</p>
+        <div class="example" data-i18n="md1_ex"><strong>الأنسب لـ:</strong> تقييم سريع للمخاطر الجدولية مع قابلية تفسير جزئية عبر أهمية الخصائص.</div>
+      </article>
+
+      <article class="model">
+        <span class="model-tag" data-i18n="md2_tag">النموذج 02</span>
+        <h3 data-i18n="md2_h">الشبكات المتكررة وLSTM والمحوّلات</h3>
+        <p data-i18n="md2_p1">تحلل نماذج التسلسل سجل المعاملات والسلوك الأخير وترتيب الأحداث.</p>
+        <p data-i18n="md2_p2">وهي مفيدة لأن الاحتيال يظهر غالبًا على شكل تسلسل، مثل عمليات شراء اختبارية صغيرة تتبعها معاملة كبيرة.</p>
+        <div class="example" data-i18n="md2_ex"><strong>الأنسب لـ:</strong> الاستيلاء على الحسابات، واختبار البطاقات، وكشف الشذوذ الزمني (Anomaly Detection).</div>
+      </article>
+
+      <article class="model">
+        <span class="model-tag" data-i18n="md3_tag">النموذج 03</span>
+        <h3 data-i18n="md3_h">الشبكات التوليدية التنافسية لبيانات الاحتيال الاصطناعية</h3>
+        <p data-i18n="md3_p1">يمكن للشبكات التوليدية التنافسية (GANs) إنشاء أمثلة اصطناعية لأنماط الاحتيال النادرة، مما يساعد على تدريب النماذج على بيانات أكثر توازنًا.</p>
+        <p data-i18n="md3_p2">وهي واعدة لكنها تتطلب تحققًا دقيقًا لتجنب البيانات الاصطناعية غير الواقعية أو التي تهدد الخصوصية.</p>
+        <div class="example" data-i18n="md3_ex"><strong>الأنسب لـ:</strong> زيادة البيانات لمجموعات بيانات الاحتيال غير المتوازنة.</div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="cases">
+  <div class="container">
+    <div class="section-head">
+      <div class="eyebrow" data-i18n="cs_eyebrow">04 · دراسات حالة واقعية</div>
+      <h2 data-i18n="cs_h2">كيف تستخدم كبرى مؤسسات المدفوعات الذكاء الاصطناعي ضد الاحتيال.</h2>
+      <p data-i18n="cs_p">استخدم عوامل التصفية للتركيز على الذكاء الاصطناعي التنبؤي أو التوليدي أو الأنظمة التنظيمية.</p>
+    </div>
+
+    <div class="case-tools">
+      <button class="filter-btn active" data-filter="all" data-i18n="flt_all">الكل</button>
+      <button class="filter-btn" data-filter="predictive" data-i18n="flt_pred">ذكاء تنبؤي</button>
+      <button class="filter-btn" data-filter="generative" data-i18n="flt_gen">ذكاء توليدي</button>
+      <button class="filter-btn" data-filter="regulatory" data-i18n="flt_reg">تنظيمي</button>
+    </div>
+
+    <div class="case-grid">
+      <article class="case-card" data-type="predictive generative">
+        <div class="logo-box visa">VISA</div>
+        <div class="case-content">
+          <h3>Visa</h3>
+          <p data-i18n="case_visa_p">تستخدم Visa الذكاء الاصطناعي والذكاء على مستوى الشبكة لمنع الاحتيال، وأطلقت درجة VAAI لكشف هجمات التعداد (Enumeration Attacks) باستخدام مكوّنات الذكاء الاصطناعي التوليدي.</p>
+          <div class="meta">
+            <span class="pill" data-i18n="case_visa_t1">تقييم مخاطر فوري</span>
+            <span class="pill" data-i18n="case_visa_t2">درجة VAAI</span>
+            <span class="pill" data-i18n="case_visa_t3">هجمات التعداد</span>
+          </div>
+        </div>
+        <div class="case-result">
+          <div class="big">$40B</div>
+          <div class="label" data-i18n="case_visa_r">معاملات احتيالية تم منعها في 2023</div>
+        </div>
+      </article>
+
+      <article class="case-card" data-type="generative">
+        <div class="logo-box mastercard">Mastercard</div>
+        <div class="case-content">
+          <h3>Mastercard</h3>
+          <p data-i18n="case_mc_p">أعلنت Mastercard عن تقنية ذكاء اصطناعي توليدي تفحص بيانات المعاملات عبر مليارات البطاقات وملايين التجار لكشف البطاقات المخترقة بشكل أسرع.</p>
+          <div class="meta">
+            <span class="pill" data-i18n="case_mc_t1">ذكاء اصطناعي توليدي</span>
+            <span class="pill" data-i18n="case_mc_t2">كشف البطاقات المخترقة</span>
+            <span class="pill" data-i18n="case_mc_t3">مخاطر التجار</span>
+          </div>
+        </div>
+        <div class="case-result">
+          <div class="big">2×</div>
+          <div class="label" data-i18n="case_mc_r">معدل كشف البطاقات المخترقة، وفقًا لـ <a href="https://www.mastercard.com/us/en/news-and-trends/press/2024/may/mastercard-accelerates-card-fraud-detection-with-generative-ai-technology.html" target="_blank" rel="noopener">Mastercard</a></div>
+        </div>
+      </article>
+
+      <article class="case-card" data-type="predictive">
+        <div class="logo-box stripe">stripe</div>
+        <div class="case-content">
+          <h3>Stripe Radar</h3>
+          <p data-i18n="case_stripe_p">يستخدم Stripe Radar ذكاءً اصطناعيًا مُدرّبًا على بيانات مدفوعات واسعة النطاق لتعيين درجات المخاطر، وفحص المدفوعات والحسابات، وحظر المعاملات عالية المخاطر تلقائيًا.</p>
+          <div class="meta">
+            <span class="pill" data-i18n="case_stripe_t1">تقييم المخاطر</span>
+            <span class="pill" data-i18n="case_stripe_t2">إشارات الشبكة</span>
+            <span class="pill" data-i18n="case_stripe_t3">حظر آلي</span>
+          </div>
+        </div>
+        <div class="case-result">
+          <div class="big">32%</div>
+          <div class="label" data-i18n="case_stripe_r">متوسط انخفاض الاحتيال الذي تذكره <a href="https://stripe.com/radar" target="_blank" rel="noopener">Stripe Radar</a></div>
+        </div>
+      </article>
+
+      <article class="case-card" data-type="regulatory predictive">
+        <div class="logo-box sama">SAMA</div>
+        <div class="case-content">
+          <h3 data-i18n="case_sama_h">البنك المركزي السعودي (ساما)</h3>
+          <p data-i18n="case_sama_p">يُلزم إطار مكافحة الاحتيال الصادر عن ساما المؤسسات المالية بالحفاظ على أنظمة كشف الاحتيال، وتشغيلها على مدار الساعة، واستخدام بيانات آنية للتدخل.</p>
+          <div class="meta">
+            <span class="pill" data-i18n="case_sama_t1">مراقبة على مدار الساعة</span>
+            <span class="pill" data-i18n="case_sama_t2">كشف الشذوذ</span>
+            <span class="pill" data-i18n="case_sama_t3">قدرات الذكاء الاصطناعي/تعلّم الآلة</span>
+          </div>
+        </div>
+        <div class="case-result">
+          <div class="big">24/7</div>
+          <div class="label" data-i18n="case_sama_r">متطلب تشغيل كشف الاحتيال من <a href="https://rulebook.sama.gov.sa/en/52-fraud-detection-systems" target="_blank" rel="noopener">دليل ساما</a></div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="charts">
+  <div class="container">
+    <div class="section-head">
+      <div class="eyebrow" data-i18n="ch_eyebrow">05 · الرسوم البيانية والبيانات الرئيسية</div>
+      <h2 data-i18n="ch_h2">أرقام رئيسية من البحث.</h2>
+      <p data-i18n="ch_p">تلخص هذه الرسوم سبب كون كشف الاحتيال أحد أكثر تطبيقات الذكاء الاصطناعي تأثيرًا في التمويل.</p>
+    </div>
+
+    <div class="chart-grid">
+      <div class="chart-card">
+        <h3 data-i18n="ch1_h">حجم الاحتيال والمدفوعات</h3>
+        <div class="bars">
+          <div class="bar-row">
+            <span data-i18n="ch1_r1">المدفوعات</span>
+            <div class="bar-track"><div class="bar-fill" style="width:100%"></div></div>
+            <span class="bar-value" data-i18n="ch1_v1">$2.5T إيرادات</span>
+          </div>
+          <div class="bar-row">
+            <span data-i18n="ch1_r2">احتيال البطاقات</span>
+            <div class="bar-track"><div class="bar-fill" style="width:68%"></div></div>
+            <span class="bar-value" data-i18n="ch1_v2">$33.83B خسائر</span>
+          </div>
+          <div class="bar-row">
+            <span data-i18n="ch1_r3">منعتها Visa</span>
+            <div class="bar-track"><div class="bar-fill" style="width:80%"></div></div>
+            <span class="bar-value" data-i18n="ch1_v3">$40B تم منعها</span>
+          </div>
+          <div class="bar-row">
+            <span data-i18n="ch1_r4">خسائر FTC</span>
+            <div class="bar-track"><div class="bar-fill" style="width:42%"></div></div>
+            <span class="bar-value" data-i18n="ch1_v4">$12.5B مُبلّغ عنها</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <h3 data-i18n="ch2_h">منظومة الذكاء الاصطناعي لمكافحة الاحتيال</h3>
+        <div class="donut-wrap">
+          <div class="donut" id="donut" data-label="المنظومة"></div>
+          <div class="legend">
+            <div class="legend-item"><span class="swatch" style="background:var(--green)"></span><span data-i18n="ch2_l1">التقييم التنبؤي</span></div>
+            <div class="legend-item"><span class="swatch" style="background:var(--blue)"></span><span data-i18n="ch2_l2">نماذج التسلسل</span></div>
+            <div class="legend-item"><span class="swatch" style="background:var(--amber)"></span><span data-i18n="ch2_l3">الذكاء الاصطناعي التوليدي</span></div>
+            <div class="legend-item"><span class="swatch" style="background:var(--red)"></span><span data-i18n="ch2_l4">الحوكمة التنظيمية</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="future">
+  <div class="container">
+    <div class="section-head">
+      <div class="eyebrow" data-i18n="fu_eyebrow">06 · نظرة لخمس سنوات</div>
+      <h2 data-i18n="fu_h2">إلى أين يتجه كشف الاحتيال بالذكاء الاصطناعي.</h2>
+      <p data-i18n="fu_p">سيصبح منع الاحتيال أكثر فورية، وأكثر اعتمادًا على الذكاء الاصطناعي، وأوثق ارتباطًا بالأمن السيبراني والامتثال.</p>
+    </div>
+
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-year">2024</div>
+        <div class="tl-card">
+          <h3 data-i18n="fu1_h">دخول الذكاء الاصطناعي التوليدي إلى أنظمة احتيال المدفوعات</h3>
+          <p data-i18n="fu1_p">أعلنت Visa وMastercard عن أنظمة قائمة على الذكاء الاصطناعي التوليدي لتقييم هجمات التعداد وكشف البطاقات المخترقة.</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">2025</div>
+        <div class="tl-card">
+          <h3 data-i18n="fu2_h">توسّع دعم التحقيق في الاحتيال</h3>
+          <p data-i18n="fu2_p">تبدأ الأطر القائمة على النماذج اللغوية الكبيرة بدعم المحللين من خلال تلخيص الأدلة والمساعدة في تحقيقات الاحتيال.</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">2026–2028</div>
+        <div class="tl-card">
+          <h3 data-i18n="fu3_h">مزيد من الكشف الفوري وعبر القنوات</h3>
+          <p data-i18n="fu3_p">تجمع الأنظمة بين بيانات المدفوعات وإشارات الأجهزة وسلوك الحسابات ومعلومات التجار وتنبيهات الأمن السيبراني.</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">2030</div>
+        <div class="tl-card">
+          <h3 data-i18n="fu4_h">منع احتيال أصيل بالذكاء الاصطناعي</h3>
+          <p data-i18n="fu4_p">يصبح كشف الاحتيال عملية حوكمة مستمرة: نماذج تكيّفية، وبيانات اصطناعية، وقابلية للتفسير، وإشراف بشري.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="challenges">
+  <div class="container">
+    <div class="section-head">
+      <div class="eyebrow" data-i18n="cg_eyebrow">07 · التحديات</div>
+      <h2 data-i18n="cg_h2">المخاطر الرئيسية ليست تقنية فقط.</h2>
+      <p data-i18n="cg_p">يجب أن توازن أنظمة الاحتيال بين الدقة والسرعة والعدالة والخصوصية وقابلية التفسير والمتطلبات التنظيمية.</p>
+    </div>
+
+    <div class="challenges-grid">
+      <article class="challenge">
+        <h3 data-i18n="cg1_h">تقنية</h3>
+        <p data-i18n="cg1_p">يجعل عدم توازن الفئات، وانحراف المفهوم، وزمن التحقق، ومتطلبات التقييم الفوري كشف الاحتيال أمرًا صعبًا.</p>
+      </article>
+      <article class="challenge">
+        <h3 data-i18n="cg2_h">أخلاقية</h3>
+        <p data-i18n="cg2_p">قد تنشئ النماذج عمليات حظر غير عادلة، أو تستخدم بيانات سلوكية حساسة، أو تصبح غامضة جدًا للعملاء والمحللين.</p>
+      </article>
+      <article class="challenge">
+        <h3 data-i18n="cg3_h">تنظيمية</h3>
+        <p data-i18n="cg3_p">تتطلب لائحة GDPR، وحوكمة قانون الذكاء الاصطناعي الأوروبي، وقواعد ساما، والإشراف المصرفي تعاملًا حذرًا مع البيانات وإشرافًا دقيقًا.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<footer id="references">
+  <div class="container footer-grid">
+    <div>
+      <h3 data-i18n="ft_concl_h">الخلاصة</h3>
+      <p data-i18n="ft_concl_p">
+        تستطيع نماذج تعلّم الآلة كشف الكثير من المعاملات الاحتيالية قبل إتمامها عند ربطها بأنظمة التفويض في الوقت الفعلي.
+        ويجمع أقوى نهج مستقبلي بين الذكاء الاصطناعي التنبؤي، ودعم الذكاء الاصطناعي التوليدي، وذكاء الشبكة، وحماية الخصوصية، والحوكمة البشرية.
+      </p>
+    </div>
+
+    <div>
+      <h3 data-i18n="ft_src_h">مصادر مختارة</h3>
+      <ul class="refs">
+        <li data-i18n="ref1"><a href="https://www.mckinsey.com/industries/financial-services/our-insights/global-payments-report" target="_blank" rel="noopener">McKinsey &amp; Company — تقرير المدفوعات العالمية 2025</a></li>
+        <li data-i18n="ref2"><a href="https://nilsonreport.com/articles/card-fraud-losses-worldwide-2024/" target="_blank" rel="noopener">Nilson Report — خسائر الاحتيال في البطاقات حول العالم</a></li>
+        <li data-i18n="ref3"><a href="https://www.ftc.gov/news-events/news/press-releases/2025/03/new-ftc-data-show-big-jump-reported-losses-fraud-125-billion-2024" target="_blank" rel="noopener">لجنة التجارة الفيدرالية (FTC) — خسائر الاحتيال 2024</a></li>
+        <li data-i18n="ref4"><a href="https://arxiv.org/abs/2010.06479" target="_blank" rel="noopener">Lucas &amp; Jurgovsky — مسح كشف الاحتيال في بطاقات الائتمان</a></li>
+        <li data-i18n="ref5"><a href="https://stripe.com/radar" target="_blank" rel="noopener">Stripe Radar — كشف احتيال المدفوعات وبطاقات الائتمان</a></li>
+        <li data-i18n="ref6"><a href="https://www.reuters.com/technology/cybersecurity/visa-prevented-40-bln-worth-fraudulent-transactions-2023-official-2024-07-23/" target="_blank" rel="noopener">Reuters — Visa منعت معاملات احتيالية بقيمة 40 مليار دولار</a></li>
+        <li data-i18n="ref7"><a href="https://www.mastercard.com/us/en/news-and-trends/press/2024/may/mastercard-accelerates-card-fraud-detection-with-generative-ai-technology.html" target="_blank" rel="noopener">Mastercard — كشف الاحتيال بالذكاء الاصطناعي التوليدي</a></li>
+        <li data-i18n="ref8"><a href="https://investor.visa.com/news/news-details/2024/Visa-Announces-Generative-AI-Powered-Fraud-Solution-to-Combat-Account-Attacks/default.aspx" target="_blank" rel="noopener">Visa — درجة VAAI لهجمات الحسابات</a></li>
+        <li data-i18n="ref9"><a href="https://rulebook.sama.gov.sa/en/52-fraud-detection-systems" target="_blank" rel="noopener">دليل ساما — أنظمة كشف الاحتيال</a></li>
+        <li data-i18n="ref10"><a href="https://eur-lex.europa.eu/eli/reg/2024/1689/oj" target="_blank" rel="noopener">قانون الذكاء الاصطناعي الأوروبي</a> و<a href="https://eur-lex.europa.eu/eli/reg/2016/679/oj" target="_blank" rel="noopener">GDPR</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="container footer-bottom">
+    <span data-i18n="ft_b1">الذكاء الاصطناعي في التمويل والخدمات المصرفية: كشف الاحتيال في بطاقات الائتمان</span>
+    <span data-i18n="ft_b2">التعلم العميق المتقدم · 2026</span>
+  </div>
+</footer>
+
+<script>
+const translations = {
+  en: {
+    _title: "AI in Finance & Banking | Credit Card Fraud Detection",
+    _toggle: "العربية",
+    _donut: "AI Stack",
+    _aria: "Transaction risk scoring demo",
+    hero_top: "Advanced Deep Learning · Research Visual Summary",
+    kicker: "AI in Finance & Banking",
+    h1: "Can AI stop <span>credit card fraud</span> before payment completion?",
+    subtitle: "A one-page interactive summary of how predictive AI and generative AI are used to score transactions, detect compromised cards, generate synthetic fraud data, and support real-time fraud prevention.",
+    btn_cases: "Explore Case Studies",
+    btn_models: "View AI Models",
+    btn_sources: "Sources",
+    risk_title: "Transaction Risk Score",
+    risk_sub: "Real-time authorization layer",
+    sig1: "Device mismatch",
+    sig1v: "High",
+    sig2: "Unusual merchant category",
+    sig2v: "Medium",
+    sig3: "Velocity pattern",
+    sig3v: "High",
+    sig4: "Card-not-present channel",
+    sig4v: "Elevated",
+    decision: "<strong>Decision:</strong> Challenge or block before completion",
+    stat1: "Global payments revenue in 2024, according to <a href=\"https://www.mckinsey.com/industries/financial-services/our-insights/global-payments-report\" target=\"_blank\" rel=\"noopener\">McKinsey</a>",
+    stat2: "Worldwide card fraud losses in 2023, according to <a href=\"https://nilsonreport.com/articles/card-fraud-losses-worldwide-2024/\" target=\"_blank\" rel=\"noopener\">Nilson Report</a>",
+    stat3: "Fraudulent transactions Visa says it prevented in 2023, reported by <a href=\"https://www.reuters.com/technology/cybersecurity/visa-prevented-40-bln-worth-fraudulent-transactions-2023-official-2024-07-23/\" target=\"_blank\" rel=\"noopener\">Reuters</a>",
+    stat4: "Average fraud reduction claimed by <a href=\"https://stripe.com/radar\" target=\"_blank\" rel=\"noopener\">Stripe Radar</a>",
+    nav_logo: "AI × Fraud Detection",
+    nav_overview: "Overview",
+    nav_types: "AI Types",
+    nav_models: "Models",
+    nav_cases: "Case Studies",
+    nav_charts: "Charts",
+    nav_future: "Outlook",
+    ov_eyebrow: "01 · Research Overview",
+    ov_h2: "Fraud detection is no longer just a rule-based problem.",
+    ov_p: "Digital payments create speed and convenience, but they also increase opportunities for fraudsters. Modern systems use machine learning to analyze transaction data, score risk, and support prevention before payment completion.",
+    ov_q_h: "Research Question",
+    ov_q_p: "Can a machine learning model detect a fraudulent credit card transaction before it is completed?",
+    ov_q_l1: "<strong>Focus:</strong> Real-time or near-real-time fraud prevention.",
+    ov_q_l2: "<strong>Goal:</strong> Detect suspicious transactions before authorization or funds transfer.",
+    ov_q_l3: "<strong>Trade-off:</strong> Catch fraud while minimizing false positives for legitimate customers.",
+    ov_f_h: "Main Finding",
+    ov_f_p: "Yes — ML systems can detect many fraudulent transactions before completion when they are integrated into real-time authorization pipelines. However, performance depends on data quality, latency, monitoring, explainability, privacy, and regulatory governance.",
+    ov_f_l1: "<strong>Evidence:</strong> Visa, Mastercard, Stripe, and SAMA case studies.",
+    ov_f_l2: "<strong>Risk:</strong> Fraudsters also use automation and generative AI.",
+    at_eyebrow: "02 · Predictive AI vs Generative AI",
+    at_h2: "Two AI approaches, different roles in fraud prevention.",
+    at_p: "Predictive AI scores real transactions. Generative AI helps create synthetic data, predict compromised-card patterns, and support investigations.",
+    at_pred_h: "Predictive AI",
+    at_pred_p: "Uses historical labelled transactions to classify new payments as legitimate or fraudulent.",
+    at_pred_l1: "<strong>Output:</strong> Fraud probability, risk score, alert, or block decision.",
+    at_pred_l2: "<strong>Examples:</strong> Gradient boosting, random forests, neural networks, LSTM, transformers.",
+    at_pred_l3: "<strong>Strength:</strong> Mature and directly usable in real-time payment authorization.",
+    at_pred_l4: "<strong>Limitation:</strong> Needs labelled data and can struggle with concept drift.",
+    at_gen_h: "Generative AI",
+    at_gen_p: "Creates synthetic fraud data, simulates attack scenarios, or assists fraud analysts.",
+    at_gen_l1: "<strong>Output:</strong> Synthetic transactions, compromised-card predictions, reports, summaries.",
+    at_gen_l2: "<strong>Examples:</strong> GANs, VAEs, diffusion models, LLMs.",
+    at_gen_l3: "<strong>Strength:</strong> Useful for rare fraud patterns and investigation support.",
+    at_gen_l4: "<strong>Limitation:</strong> Harder to validate and may create privacy or explainability risks.",
+    md_eyebrow: "03 · Model Families",
+    md_h2: "Three model types used in credit card fraud detection.",
+    md_p: "Each model family solves a different problem: tabular risk scoring, transaction-sequence learning, and rare fraud data generation.",
+    md1_tag: "Model 01",
+    md1_h: "Gradient Boosting & Ensembles",
+    md1_p1: "Tree-based models such as XGBoost, LightGBM, CatBoost, and random forests are strong for structured transaction data.",
+    md1_p2: "They can learn complex interactions between merchant, amount, time, device, and behaviour signals.",
+    md1_ex: "<strong>Best fit:</strong> Fast tabular risk scoring with some interpretability through feature importance.",
+    md2_tag: "Model 02",
+    md2_h: "RNNs, LSTMs & Transformers",
+    md2_p1: "Sequence models analyze transaction history, recent behaviour, and event order.",
+    md2_p2: "They are useful because fraud often appears as a sequence, such as small test purchases followed by a large transaction.",
+    md2_ex: "<strong>Best fit:</strong> Account takeover, card testing, and time-based anomaly detection.",
+    md3_tag: "Model 03",
+    md3_h: "GANs for Synthetic Fraud Data",
+    md3_p1: "GANs can create synthetic examples of rare fraud patterns, helping models train on more balanced data.",
+    md3_p2: "They are promising but require careful validation to avoid unrealistic or privacy-risky synthetic data.",
+    md3_ex: "<strong>Best fit:</strong> Data augmentation for imbalanced fraud datasets.",
+    cs_eyebrow: "04 · Real-World Case Studies",
+    cs_h2: "How leading payment organizations use AI against fraud.",
+    cs_p: "Use the filters to focus on predictive AI, generative AI, or regulatory systems.",
+    flt_all: "All",
+    flt_pred: "Predictive AI",
+    flt_gen: "Generative AI",
+    flt_reg: "Regulatory",
+    case_visa_p: "Visa uses AI and network-level intelligence to prevent fraud and launched the VAAI Score to detect enumeration attacks using generative AI components.",
+    case_visa_t1: "Real-time risk scoring",
+    case_visa_t2: "VAAI Score",
+    case_visa_t3: "Enumeration attacks",
+    case_visa_r: "Fraudulent transactions prevented in 2023",
+    case_mc_p: "Mastercard announced generative AI technology that scans transaction data across billions of cards and millions of merchants to detect compromised cards faster.",
+    case_mc_t1: "Generative AI",
+    case_mc_t2: "Compromised-card detection",
+    case_mc_t3: "Merchant risk",
+    case_mc_r: "Detection rate for compromised cards, according to <a href=\"https://www.mastercard.com/us/en/news-and-trends/press/2024/may/mastercard-accelerates-card-fraud-detection-with-generative-ai-technology.html\" target=\"_blank\" rel=\"noopener\">Mastercard</a>",
+    case_stripe_p: "Stripe Radar uses AI trained on large-scale payment data to assign risk scores, scan payments and accounts, and automatically block high-risk transactions.",
+    case_stripe_t1: "Risk scoring",
+    case_stripe_t2: "Network signals",
+    case_stripe_t3: "Automated blocking",
+    case_stripe_r: "Average fraud reduction claimed by <a href=\"https://stripe.com/radar\" target=\"_blank\" rel=\"noopener\">Stripe Radar</a>",
+    case_sama_h: "Saudi Central Bank / SAMA",
+    case_sama_p: "SAMA’s Counter-Fraud Framework requires financial organizations to maintain fraud detection systems, operate them 24/7, and use timely data for intervention.",
+    case_sama_t1: "24/7 monitoring",
+    case_sama_t2: "Anomaly detection",
+    case_sama_t3: "AI/ML capability",
+    case_sama_r: "Fraud detection operation requirement from <a href=\"https://rulebook.sama.gov.sa/en/52-fraud-detection-systems\" target=\"_blank\" rel=\"noopener\">SAMA Rulebook</a>",
+    ch_eyebrow: "05 · Charts & Key Data",
+    ch_h2: "Key figures from the research.",
+    ch_p: "These visuals summarize why fraud detection is a high-impact AI use case in finance.",
+    ch1_h: "Fraud and payments scale",
+    ch1_r1: "Payments",
+    ch1_v1: "$2.5T revenue",
+    ch1_r2: "Card fraud",
+    ch1_v2: "$33.83B losses",
+    ch1_r3: "Visa blocked",
+    ch1_v3: "$40B prevented",
+    ch1_r4: "FTC losses",
+    ch1_v4: "$12.5B reported",
+    ch2_h: "Fraud AI stack",
+    ch2_l1: "Predictive scoring",
+    ch2_l2: "Sequence models",
+    ch2_l3: "Generative AI",
+    ch2_l4: "Regulatory governance",
+    fu_eyebrow: "06 · Five-Year Outlook",
+    fu_h2: "Where AI fraud detection is heading next.",
+    fu_p: "Fraud prevention will become more real-time, more AI-native, and more closely connected with cybersecurity and compliance.",
+    fu1_h: "Generative AI enters payment fraud systems",
+    fu1_p: "Visa and Mastercard announced generative-AI-based systems for enumeration attack scoring and compromised-card detection.",
+    fu2_h: "Fraud investigation support expands",
+    fu2_p: "LLM-based frameworks start to support analysts by summarizing evidence and assisting fraud investigations.",
+    fu3_h: "More real-time and cross-channel detection",
+    fu3_p: "Systems combine payment data, device signals, account behaviour, merchant intelligence, and cybersecurity alerts.",
+    fu4_h: "AI-native fraud prevention",
+    fu4_p: "Fraud detection becomes a continuous governance process: adaptive models, synthetic data, explainability, and human oversight.",
+    cg_eyebrow: "07 · Challenges",
+    cg_h2: "The main risks are not only technical.",
+    cg_p: "Fraud systems must balance accuracy, speed, fairness, privacy, explainability, and regulatory requirements.",
+    cg1_h: "Technical",
+    cg1_p: "Class imbalance, concept drift, verification latency, and real-time scoring requirements make fraud detection difficult.",
+    cg2_h: "Ethical",
+    cg2_p: "Models may create unfair blocks, use sensitive behavioural data, or become too opaque for customers and analysts.",
+    cg3_h: "Regulatory",
+    cg3_p: "GDPR, EU AI Act governance, SAMA rules, and banking supervision require careful data handling and oversight.",
+    ft_concl_h: "Conclusion",
+    ft_concl_p: "ML models can detect many fraudulent transactions before completion when they are connected to real-time authorization systems. The strongest future approach combines predictive AI, generative AI support, network intelligence, privacy protection, and human governance.",
+    ft_src_h: "Selected Sources",
+    ref1: "<a href=\"https://www.mckinsey.com/industries/financial-services/our-insights/global-payments-report\" target=\"_blank\" rel=\"noopener\">McKinsey & Company — The 2025 Global Payments Report</a>",
+    ref2: "<a href=\"https://nilsonreport.com/articles/card-fraud-losses-worldwide-2024/\" target=\"_blank\" rel=\"noopener\">Nilson Report — Card Fraud Losses Worldwide</a>",
+    ref3: "<a href=\"https://www.ftc.gov/news-events/news/press-releases/2025/03/new-ftc-data-show-big-jump-reported-losses-fraud-125-billion-2024\" target=\"_blank\" rel=\"noopener\">Federal Trade Commission — 2024 fraud losses</a>",
+    ref4: "<a href=\"https://arxiv.org/abs/2010.06479\" target=\"_blank\" rel=\"noopener\">Lucas & Jurgovsky — Credit Card Fraud Detection Survey</a>",
+    ref5: "<a href=\"https://stripe.com/radar\" target=\"_blank\" rel=\"noopener\">Stripe Radar — Payment and Credit Card Fraud Detection</a>",
+    ref6: "<a href=\"https://www.reuters.com/technology/cybersecurity/visa-prevented-40-bln-worth-fraudulent-transactions-2023-official-2024-07-23/\" target=\"_blank\" rel=\"noopener\">Reuters — Visa prevented $40B in fraudulent transactions</a>",
+    ref7: "<a href=\"https://www.mastercard.com/us/en/news-and-trends/press/2024/may/mastercard-accelerates-card-fraud-detection-with-generative-ai-technology.html\" target=\"_blank\" rel=\"noopener\">Mastercard — Generative AI fraud detection</a>",
+    ref8: "<a href=\"https://investor.visa.com/news/news-details/2024/Visa-Announces-Generative-AI-Powered-Fraud-Solution-to-Combat-Account-Attacks/default.aspx\" target=\"_blank\" rel=\"noopener\">Visa — VAAI Score for account attacks</a>",
+    ref9: "<a href=\"https://rulebook.sama.gov.sa/en/52-fraud-detection-systems\" target=\"_blank\" rel=\"noopener\">SAMA Rulebook — Fraud Detection Systems</a>",
+    ref10: "<a href=\"https://eur-lex.europa.eu/eli/reg/2024/1689/oj\" target=\"_blank\" rel=\"noopener\">EU AI Act</a> and <a href=\"https://eur-lex.europa.eu/eli/reg/2016/679/oj\" target=\"_blank\" rel=\"noopener\">GDPR</a>",
+    ft_b1: "AI in Finance & Banking: Credit Card Fraud Detection",
+    ft_b2: "Advanced Deep Learning · 2026"
+  },
+  ar: {}
+};
+
+// Capture the Arabic strings already present in the static HTML as the "ar" dictionary.
+document.querySelectorAll('[data-i18n]').forEach(el => {
+  translations.ar[el.getAttribute('data-i18n')] = el.innerHTML;
+});
+translations.ar._title = "الذكاء الاصطناعي في التمويل والخدمات المصرفية | كشف الاحتيال في بطاقات الائتمان";
+translations.ar._toggle = "English";
+translations.ar._donut = "المنظومة";
+translations.ar._aria = "عرض توضيحي لتقييم مخاطر المعاملة";
+
+function setLanguage(lang) {
+  const dict = translations[lang];
+  const html = document.documentElement;
+  html.setAttribute('lang', lang);
+  html.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+  document.title = dict._title;
+
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (dict[key] !== undefined) el.innerHTML = dict[key];
+  });
+
+  const donut = document.getElementById('donut');
+  if (donut) donut.setAttribute('data-label', dict._donut);
+
+  const hv = document.getElementById('heroVisual');
+  if (hv && dict._aria) hv.setAttribute('aria-label', dict._aria);
+
+  const toggle = document.getElementById('langToggle');
+  if (toggle) toggle.textContent = dict._toggle;
+
+  try { localStorage.setItem('preferredLang', lang); } catch (e) {}
+}
+
+document.getElementById('langToggle').addEventListener('click', () => {
+  const next = document.documentElement.getAttribute('lang') === 'ar' ? 'en' : 'ar';
+  setLanguage(next);
+});
+
+// Restore saved preference (defaults to Arabic)
+let saved = 'ar';
+try { saved = localStorage.getItem('preferredLang') || 'ar'; } catch (e) {}
+if (saved === 'en') setLanguage('en');
+
+// Case study filters
+const filterButtons = document.querySelectorAll('.filter-btn');
+const caseCards = document.querySelectorAll('.case-card');
+
+filterButtons.forEach(button => {
+  button.addEventListener('click', () => {
+    filterButtons.forEach(btn => btn.classList.remove('active'));
+    button.classList.add('active');
+    const filter = button.dataset.filter;
+    caseCards.forEach(card => {
+      card.style.display = (filter === 'all' || card.dataset.type.includes(filter)) ? 'grid' : 'none';
+    });
+  });
+});
+
+// Smooth scroll
+document.querySelectorAll('.nav-links a, .hero-actions a').forEach(link => {
+  link.addEventListener('click', e => {
+    const targetId = link.getAttribute('href');
+    if (!targetId || !targetId.startsWith('#')) return;
+    const target = document.querySelector(targetId);
+    if (!target) return;
+    e.preventDefault();
+    window.scrollTo({ top: target.offsetTop - 72, behavior: 'smooth' });
+  });
+});
+</script>
+</body>
+</html>
